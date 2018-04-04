@@ -9,10 +9,10 @@ COLOR_RED="\033[0;31m" # Red
 COLOR_GREEN="\033[1;32m" # Green
 NO_COLOR="\033[0m" # Reset color
 
-# Get environments
-ENV="staging"
-if [ "$1" == "production" ]; then
-  ENV="production"
+# Get option about environment
+OPTION_ENV=""
+if [ "$1" == "--no-staging" ]; then
+  OPTION_ENV="no-staging"
 fi;
 
 # Get project name
@@ -91,7 +91,7 @@ git -C ${PROJECT} commit -m "Initial Sage configuration" >> ~/.twine.log 2>&1
 
 # Partial Trellis configuration
 printf "\n${COLOR_GREEN}Configuring Trellis...${NO_COLOR}\n\n"
-if [ "$ENV" == "production" ]; then
+if [ "$OPTION_ENV" == "no-staging" ]; then
   FILES=()
   sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
   sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
@@ -112,15 +112,15 @@ git -C ${PROJECT} add . >> ~/.twine.log 2>&1
 git -C ${PROJECT} commit -m "Partial Trellis configuration" >> ~/.twine.log 2>&1
 
 # Rename branch and push to origin
-printf "${COLOR_GREEN}Renaming branch ${ENV} and pushing it to origin...${NO_COLOR}\n\n"
-git -C ${PROJECT} branch -m ${ENV} >> ~/.twine.log 2>&1
-git -C ${PROJECT} push origin ${ENV} >> ~/.twine.log 2>&1
+printf "${COLOR_GREEN}Renaming branch production and pushing it to origin...${NO_COLOR}\n\n"
+git -C ${PROJECT} branch -m production >> ~/.twine.log 2>&1
+git -C ${PROJECT} push origin production >> ~/.twine.log 2>&1
 
-if [ "$ENV" == "staging" ]; then
+if [ "$OPTION_ENV" == "" ]; then
   # Rename branch and push to origin
-  printf "${COLOR_GREEN}Creating branch production and pushing it to origin...${NO_COLOR}\n\n"
-  git -C ${PROJECT} checkout -b production >> ~/.twine.log 2>&1
-  git -C ${PROJECT} push origin production >> ~/.twine.log 2>&1
+  printf "${COLOR_GREEN}Creating branch staging and pushing it to origin...${NO_COLOR}\n\n"
+  git -C ${PROJECT} checkout -b staging >> ~/.twine.log 2>&1
+  git -C ${PROJECT} push origin staging >> ~/.twine.log 2>&1
 fi;
 
 # Print message

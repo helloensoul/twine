@@ -9,7 +9,7 @@ Bash script to start up a new project with the Roots stack.
 This tool has only been tested with macOS, any help with other OS would be appreciated
 
 ### 📌 Tips
-Use `./twine.sh production` to configure Trellis only for production and not also for a staging environment.
+Use `./twine.sh --no-staging` to configure Trellis only for production and not also for a staging environment.
 
 ## 🤝 Contributing
 
