@@ -3,8 +3,8 @@
 - [ ] I've read the guidelines for Contributing to this project in the README.md
 - [ ] This is a feature request
 - [ ] This is a bug report
-- [ ] This request isn't a duplicate of an [existing issue](https://github.com/ensoul/twine/issues)
-- [ ] I've read the [README](https://github.com/ensoul/twine/blob/master/README.md) and followed its instructions (if applicable)
+- [ ] This request isn't a duplicate of an [existing issue](https://github.com/helloensoul/twine/issues)
+- [ ] I've read the [README](https://github.com/helloensoul/twine/blob/master/README.md) and followed its instructions (if applicable)
 
 Replace any `X` with your information.
 
