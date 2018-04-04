@@ -112,9 +112,16 @@ git -C ${PROJECT} add . >> ~/.twine.log 2>&1
 git -C ${PROJECT} commit -m "Partial Trellis configuration" >> ~/.twine.log 2>&1
 
 # Rename branch and push to origin
-printf "${COLOR_GREEN}Renaming branch and pushing to origin...${NO_COLOR}\n\n"
+printf "${COLOR_GREEN}Renaming branch ${ENV} and pushing it to origin...${NO_COLOR}\n\n"
 git -C ${PROJECT} branch -m ${ENV} >> ~/.twine.log 2>&1
 git -C ${PROJECT} push origin ${ENV} >> ~/.twine.log 2>&1
+
+if [ "$ENV" == "staging" ]; then
+  # Rename branch and push to origin
+  printf "${COLOR_GREEN}Creating branch production and pushing it to origin...${NO_COLOR}\n\n"
+  git -C ${PROJECT} checkout -b production >> ~/.twine.log 2>&1
+  git -C ${PROJECT} push origin production >> ~/.twine.log 2>&1
+fi;
 
 # Print message
 printf "${COLOR_GREEN}Project created!${NO_COLOR}\n"
