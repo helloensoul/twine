@@ -12,7 +12,7 @@ NO_COLOR="\033[0m" # Reset color
 # Get environments
 ENV="staging"
 if [ "$1" == "production" ]; then
-    ENV="production"
+  ENV="production"
 fi;
 
 # Get project name
@@ -25,8 +25,8 @@ printf "\n ${COLOR_GREEN}Insert project path ${NO_COLOR}[${COLOR_YELLOW}e.g. /Us
 printf " > "
 read PROJECT_PATH
 if [ ! -d "$PROJECT_PATH" ]; then
-    printf "\n ${COLOR_RED}Error: wrong path!${NO_COLOR}\n"
-    exit
+  printf "\n ${COLOR_RED}Error: wrong path!${NO_COLOR}\n"
+  exit
 fi
 
 # Get project repository URL
@@ -40,7 +40,7 @@ printf "\n ${COLOR_GREEN}Theme directory name ${NO_COLOR}[${COLOR_YELLOW}${THEME
 printf " > "
 read THEME_NAME
 if [ "$THEME_NAME" == "" ]; then
-    THEME_NAME=$THEME_DEFAULT_NAME
+  THEME_NAME=$THEME_DEFAULT_NAME
 fi;
 
 # Print message
@@ -55,7 +55,7 @@ git -C ${PROJECT} init >> ~/.twine.log 2>&1
 git -C ${PROJECT} remote add origin ${REPO_URL} >> ~/.twine.log 2>&1
 touch ${PROJECT}/.gitignore >> ~/.twine.log 2>&1
 git -C ${PROJECT} add . >> ~/.twine.log 2>&1
-git -C ${PROJECT} commit -m "Commit iniziale" >> ~/.twine.log 2>&1
+git -C ${PROJECT} commit -m "Initial commit" >> ~/.twine.log 2>&1
 
 # Set tools from roots.io
 TOOLS=(trellis bedrock sage)
@@ -67,13 +67,13 @@ SUBTREES=(trellis site site/web/app/themes/${THEME_NAME})
 # Create project subtrees
 COUNT=0
 for TOOL in ${TOOLS[@]}; do
-    git -C ${PROJECT} remote add ${TOOL} https://github.com/roots/${TOOL}.git >> ~/.twine.log 2>&1
-    git -C ${PROJECT} fetch ${TOOL} >> ~/.twine.log 2>&1
-    git -C ${PROJECT} checkout -b ${TOOL} ${TOOL}/master >> ~/.twine.log 2>&1
-    git -C ${PROJECT} checkout master >> ~/.twine.log 2>&1
-    git -C ${PROJECT} read-tree --prefix=${SUBTREES[$COUNT]}/ -u ${TOOL}/master >> ~/.twine.log 2>&1
-    git -C ${PROJECT} commit -m "Aggiunto il subtree per ${TOOLS_NAME[$COUNT]}" >> ~/.twine.log 2>&1
-    COUNT=$(( $COUNT + 1 ))
+  git -C ${PROJECT} remote add ${TOOL} https://github.com/roots/${TOOL}.git >> ~/.twine.log 2>&1
+  git -C ${PROJECT} fetch ${TOOL} >> ~/.twine.log 2>&1
+  git -C ${PROJECT} checkout -b ${TOOL} ${TOOL}/master >> ~/.twine.log 2>&1
+  git -C ${PROJECT} checkout master >> ~/.twine.log 2>&1
+  git -C ${PROJECT} read-tree --prefix=${SUBTREES[$COUNT]}/ -u ${TOOL}/master >> ~/.twine.log 2>&1
+  git -C ${PROJECT} commit -m "Add ${TOOLS_NAME[$COUNT]} subtree" >> ~/.twine.log 2>&1
+  COUNT=$(( $COUNT + 1 ))
 done
 
 # Setup theme
@@ -87,29 +87,29 @@ yarn -s >> ~/.twine.log 2>&1
 yarn -s build >> ~/.twine.log 2>&1
 wait
 git -C ${PROJECT} add . >> ~/.twine.log 2>&1
-git -C ${PROJECT} commit -m "Configurazione iniziale di Sage" >> ~/.twine.log 2>&1
+git -C ${PROJECT} commit -m "Initial Sage configuration" >> ~/.twine.log 2>&1
 
 # Partial Trellis configuration
 printf "\n${COLOR_GREEN}Configuring Trellis...${NO_COLOR}\n\n"
 if [ "$ENV" == "production" ]; then
-    FILES=()
-    sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
+  FILES=()
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
 else
-    FILES=()
-    sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
-    sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|branch: master|branch: staging|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
-    sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/vault.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-    sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
+  FILES=()
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: staging|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/vault.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
 fi;
 git -C ${PROJECT} add . >> ~/.twine.log 2>&1
-git -C ${PROJECT} commit -m "Configurazione parziale di Trellis" >> ~/.twine.log 2>&1
+git -C ${PROJECT} commit -m "Partial Trellis configuration" >> ~/.twine.log 2>&1
 
 # Rename branch and push to origin
 printf "${COLOR_GREEN}Renaming branch and pushing to origin...${NO_COLOR}\n\n"
