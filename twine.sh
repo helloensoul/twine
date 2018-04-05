@@ -19,6 +19,7 @@ fi;
 printf "\n ${COLOR_GREEN}Insert project name ${NO_COLOR}[${COLOR_YELLOW}e.g. example.com${NO_COLOR}]:\n"
 printf " > "
 read PROJECT_NAME
+PROJECT_NAME_NO_TLD=$(echo "${PROJECT_NAME}" | sed -e "s/\.[a-z]*$//")
 
 # Get project path
 printf "\n ${COLOR_GREEN}Insert project path ${NO_COLOR}[${COLOR_YELLOW}e.g. /Users/username/Projects${NO_COLOR}]:\n"
@@ -95,28 +96,30 @@ if [ "$OPTION_ENV" == "no-staging" ]; then
   # Development
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/vault.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/wordpress_sites.yml
+  sed -i "" -e "/^#/! s|example.test|${PROJECT_NAME_NO_TLD}.test|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/wordpress_sites.yml
 
   # Production
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
 else
   # Development
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/vault.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/wordpress_sites.yml
+  sed -i "" -e "/^#/! s|example.test|${PROJECT_NAME_NO_TLD}.test|g" ${PROJECT}/${SUBTREES[0]}/group_vars/development/wordpress_sites.yml
 
   # Staging
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: staging|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/vault.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
-  sed -i "" -e "s|branch: master|branch: staging|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
-  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/staging/wordpress_sites.yml
 
   # Production
+  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
+  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/vault.yml
   sed -i "" -e "/^#/! s|example.com|${PROJECT_NAME}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-  sed -i "" -e "s|branch: master|branch: production|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
-  sed -i "" -e "s|git@github.com:example/example.com.git|${REPO_URL}|g" ${PROJECT}/${SUBTREES[0]}/group_vars/production/wordpress_sites.yml
 fi;
 git -C ${PROJECT} add . >> ~/.twine.log 2>&1
 git -C ${PROJECT} commit -m "Partial Trellis configuration" >> ~/.twine.log 2>&1
